@@ -1,7 +1,8 @@
 from bson import ObjectId
-from exceptions import verify_contact, verify_id
 from fastapi import status
 from fastapi.exceptions import HTTPException
+
+from exceptions import verify_contact, verify_id
 from mongo_db import Database
 
 db = Database(uri="mongodb://localhost:27017/", database_name="contacts")
@@ -18,6 +19,7 @@ def create_contact(contact):
         str: La ID del contacto recién creado como una cadena.
     """
     contact_id = db.insert_one_document("contacts", contact).inserted_id
+    db.close()
     return str(contact_id)
 
 
@@ -34,6 +36,7 @@ def get_contact_by_id(contact_id: str):
     verify_id(contact_id)
     verify_contact(contact_id, db)
     contact = db.find_one_document("contacts", {"_id": ObjectId(contact_id)})
+    db.close()
     return contact
 
 
@@ -50,6 +53,7 @@ def get_all_contacts(skip, limit):
         contacts.append(contact)
     if not contacts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact no found.")
+    db.close()
     return (count, contacts)
 
 
@@ -71,6 +75,7 @@ def update_contact(contact_id: str, updates: dict):
     allowed_fields = ["first_name", "last_name", "twitter", "description"]
     updates = {field: value for field, value in updates.items() if field in allowed_fields}
     result = db.update_one_document("contacts", ObjectId(contact_id), updates)
+    db.close()
     return result.modified_count
 
 
@@ -87,4 +92,5 @@ def delete_contact(contact_id: str):
     verify_id(contact_id)
     verify_contact(contact_id, db)
     result = db.delete_one_document("contacts", ObjectId(contact_id))
+    db.close()
     return result.deleted_count
