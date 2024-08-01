@@ -1,3 +1,5 @@
+from fastapi import FastAPI
+
 from crud import (
     create_contact,
     delete_contact,
@@ -5,7 +7,6 @@ from crud import (
     get_contact_by_id,
     update_contact,
 )
-from fastapi import FastAPI
 from schemas import Contact, ContactOut
 
 app = FastAPI()
@@ -32,9 +33,7 @@ async def get_one(id: str):
 async def create(contact: Contact) -> str:
     """Obtiene un contacto almacenado en la base de datos por su ID."""
     id = create_contact(contact.model_dump())
-    print(id)
     contact_created = get_contact_by_id(id)
-    print(contact_created)
     return ContactOut(**contact_created)
 
 
