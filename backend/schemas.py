@@ -9,7 +9,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class Contact(BaseModel):
-    first_name: str | None = None
+    first_name: str
     last_name: str | None = None
     date_bird: datetime | None = None
     phone: list[PhoneNumber] | None = None
@@ -20,6 +20,7 @@ class Contact(BaseModel):
     address: str | None = None
     company: str | None = None
     job_title: str | None = None
+    favorite: bool | None = False
 
 
 class ContactOut(Contact):
@@ -42,6 +43,7 @@ class ContactOut(Contact):
                 "address": "Calle 123, Ciudad, Estado, País",
                 "company": "Ejemplo de empresa",
                 "job_title": "Ingeniero de software",
+                "favorite": "True" "",
             }
         },
     )
