@@ -3,12 +3,13 @@ import { getContacts } from "../contact.ts";
 import { ContactOut } from '../types/conctact.ts';
 
 export async function loader() {
-  const contacts: ContactOut  = await getContacts();
+  const contacts  = await getContacts();
   return { contacts }
 }
 
 export default function Root() {
-    const { contacts } = useLoaderData();
+    const { contactsList } = useLoaderData();
+    const contacts: ContactOut[] = contactsList;
     return (
       <>
         <div id="sidebar">
