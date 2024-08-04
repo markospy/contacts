@@ -1,15 +1,13 @@
 import { Outlet, Link, useLoaderData } from 'react-router-dom'
-import { getContacts } from "../contact.ts";
-import { ContactOut } from '../types/conctact.ts';
+import { Contacts } from '../fectching/query.ts'
 
 export async function loader() {
-  const contacts  = await getContacts();
-  return { contacts }
+  const contacts  = await Contacts();
+  return contacts
 }
 
 export default function Root() {
-    const { contactsList } = useLoaderData();
-    const contacts: ContactOut[] = contactsList;
+    const { contacts } = useLoaderData();
     return (
       <>
         <div id="sidebar">
