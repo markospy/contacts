@@ -8,4 +8,7 @@ const instance = axios.create({
   headers: { 'Accept': 'application/json' }
 })
 
-export const getContacts = ()  => instance.get<ContactsOut[]>('contact').then(res => res.data);
+export const getContacts = ()  => {
+  return instance.get<ContactsOut[]>('contact')
+    .then(res => res.data)
+};
