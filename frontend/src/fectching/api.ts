@@ -9,6 +9,6 @@ const instance = axios.create({
 })
 
 export const getContacts = ()  => {
-  return instance.get<ContactsOut[]>('contact')
+  return instance.get<ContactsOut[]>('/contacts')
     .then(res => res.data)
 };
