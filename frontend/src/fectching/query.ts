@@ -6,10 +6,8 @@ export const Contacts = () => {
 	const { isPending, isError, data, error } = useQuery(
 	{
 		queryKey: ['contacts'],
-		queryFn: () => getContacts()
+		queryFn: getContacts
 	});
-
-	console.log('Hola');
 
 	if (isPending) {
 		return {'status': 'pending'};
