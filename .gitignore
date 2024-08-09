@@ -1,6 +1,6 @@
 #Backend
 *.pyc
-.enviroment/
+.contact_backend/
 
 #Frontend
 # Logs
