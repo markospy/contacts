@@ -1,13 +1,21 @@
-import { Outlet, Link, useLoaderData } from 'react-router-dom'
-import { Contacts } from '../fectching/query.ts'
+import { Outlet, Link, useLoaderData, Form, redirect } from 'react-router-dom'
+import { contactListQuery, contactPostQuery } from '../fectching/query.ts'
+import { QueryClient } from '@tanstack/react-query'
+import { ContactsOutArray, ContactsOut } from '../types/conctact.ts'
 
-export async function loader() {
-  const contacts  = await Contacts();
-  return contacts
-}
+
+export const loader = async (queryClient: QueryClient) => {
+  const data = await queryClient.ensureQueryData(contactListQuery());
+  return data as ContactsOutArray;
+};
+
+export const action = async () => {
+  const  { contact }  = await contactPostQuery();
+  return redirect(`/contacts/${contact._id}`);
+};
 
 export default function Root() {
-    const { contacts } = useLoaderData();
+    const { contacts } = useLoaderData() as ContactsOutArray;
     return (
       <>
         <div id="sidebar">
@@ -31,9 +39,9 @@ export default function Root() {
                 aria-live="polite"
               ></div>
             </form>
-            <form method="post">
+            <Form method="post">
               <button type="submit">New</button>
-            </form>
+            </Form>
           </div>
           <nav>
             {contacts.length ? (
@@ -41,12 +49,11 @@ export default function Root() {
                 {contacts.map((contact) => (
                   <li key={contact._id}>
                     <Link to={`contact/${contact._id}`} >
-                      {contact.first_name || contact.last_name && (
-                        <>
-                          {contact.first_name} {contact.last_name}
-                        </>
-                      )}{" "}
-                      {contact.favorite && <span>🤍</span>}
+                      {contact.first_name && contact.first_name}
+                      {" "}
+                      {contact.last_name && contact.last_name}
+                      {" "}
+                      {contact.favorite && <span>★</span>}
                     </Link>
                   </li>
                 ))}

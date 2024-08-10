@@ -1,21 +1,15 @@
-import { useQuery  } from "@tanstack/react-query";
-import { getContacts } from "./api";
+import { queryOptions } from "@tanstack/react-query";
+import { getContacts, createContact } from "./api";
+
+export const contactListQuery = () =>
+	queryOptions({
+		queryKey: ['contacts', 'get'],
+		queryFn: () => getContacts(),
+	})
 
 
-export const Contacts = () => {
-	const { isPending, isError, data, error } = useQuery(
-	{
-		queryKey: ['contacts'],
-		queryFn: getContacts
-	});
-
-	if (isPending) {
-		return {'status': 'pending'};
-	}
-
-	if (isError) {
-		return {'error': error}
-	}
-
-	return data;
-}
+export const contactPostQuery = () =>
+	queryOptions({
+		queryKey: ['contact', 'post'],
+		queryFn: () => createContact(),
+	})

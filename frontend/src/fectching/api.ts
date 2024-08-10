@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ContactsOut } from '../types/conctact'
+import { ContactsOutArray } from '../types/conctact'
 
 
 const instance = axios.create({
@@ -9,6 +9,20 @@ const instance = axios.create({
 })
 
 export const getContacts = ()  => {
-  return instance.get<ContactsOut[]>('/contacts')
-    .then(res => res.data)
+  return instance.get<ContactsOutArray>('/contacts')
+    .then(res => {
+      console.log(res.data);
+      return res.data;
+    })
 };
+
+
+export const createContact = () => {
+  return instance.post('/contacts/', {
+    "first_name": "Desconocido",
+    "favorite": false
+  }).then(res => {
+    console.log(res);
+    return res;
+  })
+}
