@@ -1,5 +1,6 @@
 import { Form } from "react-router-dom";
-
+import { ContactsOut } from '../types/conctact'
+ 
 export default function Contact() {
   const contact = {
     first: "Your",
@@ -17,7 +18,7 @@ export default function Contact() {
           key={contact.avatar}
           src={
             contact.avatar ||
-            `https://robohash.org/${contact.id}.png?size=200x200`
+            `https://robohash.org/${contact.first}.png?size=200x200`
           }
         />
       </div>
