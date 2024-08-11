@@ -1,33 +1,36 @@
-import { Form } from "react-router-dom";
-import { ContactsOut } from '../types/conctact'
- 
-export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://robohash.org/you.png?size=200x200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+import { Form, useLoaderData } from "react-router-dom";
+import { ContactsOut } from '../types/conctact';
+import { contactQuery } from '../fectching/query';
+import { queryClient } from '../main'
+
+export async function loader({ params }) {
+
+  if (typeof params.contactId === 'string') {
+    const contact = await queryClient.ensureQueryData(contactQuery(params.contactId));
+    return contact as ContactsOut;
+  }
+}
+
+export function Contact() {
+  const contact = useLoaderData() as ContactsOut;
 
   return (
     <div id="contact">
       <div>
         <img
-          key={contact.avatar}
+          key={contact._id}
           src={
-            contact.avatar ||
-            `https://robohash.org/${contact.first}.png?size=200x200`
+            contact.first_name &&
+            `https://robohash.org/${contact._id}.png?size=200x200`
           }
         />
       </div>
 
       <div>
         <h1>
-          {contact.first || contact.last ? (
+          {contact.first_name || contact.last_name ? (
             <>
-              {contact.first} {contact.last}
+              {contact.first_name} {contact.last_name}
             </>
           ) : (
             <i>No Name</i>
@@ -46,7 +49,7 @@ export default function Contact() {
           </p>
         )}
 
-        {contact.notes && <p>{contact.notes}</p>}
+        {contact.description && <p>{contact.description}</p>}
 
         <div>
           <Form action="edit">
@@ -73,7 +76,7 @@ export default function Contact() {
   );
 }
 
-function Favorite({ contact }) {
+function Favorite({ contact }: { contact: ContactsOut }) {
   const favorite = contact.favorite;
   return (
     <Form method="post">
