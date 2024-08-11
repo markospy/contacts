@@ -1,7 +1,7 @@
 import { Outlet, Link, useLoaderData, Form, redirect } from 'react-router-dom'
 import { contactListQuery, contactPostQuery } from '../fectching/query.ts'
 import { QueryClient } from '@tanstack/react-query'
-import { ContactsOutArray, ContactsOut } from '../types/conctact.ts'
+import { ContactsOutArray } from '../types/conctact.ts'
 
 
 export const loader = async (queryClient: QueryClient) => {
@@ -9,9 +9,9 @@ export const loader = async (queryClient: QueryClient) => {
   return data as ContactsOutArray;
 };
 
-export const action = async () => {
-  const  { contact }  = await contactPostQuery();
-  return redirect(`/contacts/${contact._id}`);
+export const action = async (queryClient: QueryClient) => {
+  const contact = await queryClient.ensureQueryData(contactPostQuery());
+  return redirect(`/contacts/${contact?._id}`);
 };
 
 export default function Root() {
