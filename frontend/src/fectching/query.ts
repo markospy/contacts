@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getContacts, createContact } from "./api";
+import { getContacts, getContact, createContact } from "./api";
 
 export const contactListQuery = () =>
 	queryOptions({
@@ -7,6 +7,11 @@ export const contactListQuery = () =>
 		queryFn: () => getContacts(),
 	})
 
+export const contactQuery = (contactId: string) =>
+	queryOptions({
+		queryKey: ['contact', 'get', contactId],
+		queryFn: () => getContact(contactId),
+	})
 
 export const contactPostQuery = () =>
 	queryOptions({

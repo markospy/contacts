@@ -8,21 +8,28 @@ const instance = axios.create({
   headers: { 'Accept': 'application/json' }
 })
 
-export const getContacts = ()  => {
-  return instance.get<ContactsOutArray>('/contacts')
+export const getContacts = async (): Promise<ContactsOutArray>  => {
+  return instance.get('/contacts')
     .then(res => {
       console.log(res.data);
       return res.data;
     })
 };
 
+export const getContact = async (contactId: string): Promise<ContactsOut>  => {
+  return instance.get(`/contacts/${contactId}`)
+    .then(res => {
+      console.log(res.data);
+      return res.data;
+    })
+};
 
-export const createContact = () => {
-  return instance.post<ContactsOut>('/contacts/', {
+export const createContact = (): Promise<ContactsOut> => {
+  return instance.post('/contacts/', {
     "first_name": "Desconocido",
     "favorite": false
-  }).then(res => {
-    console.log(res);
-    return res;
+  }).then(response => {
+    console.log(response.data);
+    return response.data;
   })
 }
