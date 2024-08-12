@@ -7,7 +7,7 @@ from crud import (
 )
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from schemas import Contact, ContactOut
+from schemas import Contact, ContactOut, ContactUpdate
 
 app = FastAPI()
 
@@ -48,9 +48,9 @@ async def create(contact: Contact) -> str:
 
 
 @app.put("/contacts/{id}", status_code=200, response_model=ContactOut)
-async def update(id: str, contact: Contact):
+async def update(id: str, contact: ContactUpdate):
     """Actualiza un contacto almacenado en la base de datos por su ID."""
-    update_contact(id, contact.model_dump())
+    update_contact(id, contact.model_dump(exclude_unset=True))
     contact = get_contact_by_id(id)
     return ContactOut(**contact)
 
