@@ -1,5 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getContacts, getContact, createContact } from "./api";
+import { getContacts, getContact, createContact, updateContact } from "./api";
+import { ContactUpdate } from '../types/conctact'
+
 
 export const contactListQuery = () =>
 	queryOptions({
@@ -16,5 +18,11 @@ export const contactQuery = (contactId: string) =>
 export const contactPostQuery = () =>
 	queryOptions({
 		queryKey: ['contact', 'post'],
-		queryFn: () => createContact(),
+		queryFn: async () => await createContact(),
+	})
+
+export const contactUpdate = (contactId: string, updates: ContactUpdate) =>
+	queryOptions({
+		queryKey: ['contact', 'update'],
+		queryFn: () => updateContact(contactId, updates),
 	})
