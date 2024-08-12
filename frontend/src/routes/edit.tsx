@@ -1,6 +1,17 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData, redirect, LoaderFunctionArgs } from "react-router-dom";
 import { ContactsOut } from '../types/conctact.ts'
+import { contactUpdate } from '../fectching/query';
+import { queryClient } from '../main.tsx'
 
+export const action = async ({ request, params }: LoaderFunctionArgs) => {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  console.log(updates)
+  if (params.contactId){
+    await queryClient.ensureQueryData(contactUpdate(params.contactId, updates));
+    return redirect(`/contact/${params.contactId}`);
+  }
+}
 
 export default function EditContact() {
   const contact = useLoaderData() as ContactsOut;
@@ -10,17 +21,17 @@ export default function EditContact() {
       <p>
         <span>Name</span>
         <input
-          placeholder="First"
+          placeholder="First name"
           aria-label="First name"
           type="text"
-          name="first"
+          name="first_name"
           defaultValue={contact?.first_name}
         />
         <input
-          placeholder="Last"
+          placeholder="Last name"
           aria-label="Last name"
           type="text"
-          name="last"
+          name="last_name"
           defaultValue={contact?.last_name}
         />
       </p>
@@ -34,19 +45,9 @@ export default function EditContact() {
         />
       </label>
       <label>
-        <span>Avatar URL</span>
-        <input
-          placeholder="https://example.com/avatar.jpg"
-          aria-label="Avatar URL"
-          type="text"
-          name="avatar"
-          defaultValue={contact?._id}
-        />
-      </label>
-      <label>
-        <span>Notes</span>
+        <span>Description</span>
         <textarea
-          name="notes"
+          name="description"
           defaultValue={contact?.description}
           rows={6}
         />
