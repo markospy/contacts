@@ -1,15 +1,16 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { QueryClient } from '@tanstack/react-query';
 import { ContactsOut } from '../types/conctact';
 import { contactQuery } from '../fectching/query';
-import { queryClient } from '../main'
 
-export async function loader({ params }) {
 
-  if (typeof params.contactId === 'string') {
-    const contact = await queryClient.ensureQueryData(contactQuery(params.contactId));
-    return contact as ContactsOut;
+export const loader = (queryClient: QueryClient) =>
+  async ({ params }: LoaderFunctionArgs<string>) => {
+    if (typeof params.contactId === 'string') {
+      const contact = await queryClient.ensureQueryData(contactQuery(params.contactId));
+      return contact as ContactsOut;
+    }
   }
-}
 
 export function Contact() {
   const contact = useLoaderData() as ContactsOut;
@@ -52,9 +53,9 @@ export function Contact() {
         {contact.description && <p>{contact.description}</p>}
 
         <div>
-          <Form action="edit">
-            <button type="submit">Edit</button>
-          </Form>
+          <Link to="edit">
+            <button>Edit</button>
+          </Link>
           <Form
             method="post"
             action="destroy"

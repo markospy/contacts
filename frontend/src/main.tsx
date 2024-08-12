@@ -6,6 +6,7 @@ import './index.css'
 import Root, { loader as rootLoader, action as rootAction } from './routes/root'
 import ErrorPage from './error-page'
 import { Contact, loader as conctactLoader } from './routes/contact'
+import EditContact from "./routes/edit";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,13 +21,20 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: async () => rootLoader(queryClient),
-    action: async () => rootAction(queryClient),
-    children: [{
+    loader: () => rootLoader(queryClient),
+    action: () => rootAction(queryClient),
+    children: [
+      {
       path: 'contact/:contactId',
       element: <Contact />,
-      loader: conctactLoader,
-    }],
+      loader: conctactLoader(queryClient),
+    },
+    {
+      path: "contact/:contactId/edit",
+      element: <EditContact />,
+      loader: conctactLoader(queryClient),
+    },
+  ],
   }
 ])
 
