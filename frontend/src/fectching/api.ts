@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ContactsOutArray, ContactsOut } from '../types/conctact'
+import { ContactsOutArray, ContactsOut, ContactUpdate } from '../types/conctact'
 
 
 const instance = axios.create({
@@ -27,11 +27,24 @@ export const getContact = async (contactId: string): Promise<ContactsOut>  => {
     })
 };
 
-export const createContact = async (): Promise<ContactsOut> => {
+export const createContact = async ():
+Promise<ContactsOut> => {
   return instance.post('/contacts/', {
     "first_name": "Desconocido",
     "favorite": false
   }).then(response => {
+    console.log(response.data);
+    return response.data;
+  })
+}
+
+export const updateContact = async (
+  contactId: string,
+  updates: ContactUpdate
+): Promise<ContactsOut> => {
+  console.log(updates)
+  return instance.put(`/contacts/${contactId}`, updates)
+  .then(response => {
     console.log(response.data);
     return response.data;
   })

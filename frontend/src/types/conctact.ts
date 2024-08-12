@@ -18,6 +18,7 @@ const contactsIn = z.object(
 )
 
 const contactsOut = contactsIn.extend({_id: z.string()});
+const contactUpdate = contactsIn.extend({first_name: z.string().optional()});
 
 const contactsOutArray = z.object({
     count: z.number(),
@@ -26,4 +27,5 @@ const contactsOutArray = z.object({
 
 export type ContactsIn = z.infer<typeof contactsIn>
 export type ContactsOut = z.infer<typeof contactsOut>
+export type ContactUpdate = z.infer<typeof contactUpdate>
 export type ContactsOutArray = z.infer<typeof contactsOutArray>
