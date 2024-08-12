@@ -1,5 +1,8 @@
 {
 	"dependencies": {
 		"@tanstack/react-query-devtools": "4"
+	},
+	"devDependencies": {
+		"tailwindcss": "^3.4.9"
 	}
 }
