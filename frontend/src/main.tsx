@@ -6,7 +6,7 @@ import './index.css'
 import Root, { loader as rootLoader, action as rootAction } from './routes/root'
 import ErrorPage from './error-page'
 import { Contact, loader as conctactLoader } from './routes/contact'
-import EditContact from "./routes/edit";
+import EditContact, {action as editAction} from "./routes/edit";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +33,7 @@ const router = createBrowserRouter([
       path: "contact/:contactId/edit",
       element: <EditContact />,
       loader: conctactLoader(queryClient),
+      action: editAction,
     },
   ],
   }
