@@ -1,21 +1,25 @@
 import { Outlet, Link, useLoaderData, Form, redirect } from 'react-router-dom'
+import { QueryClient } from '@tanstack/react-query';
 import { contactListQuery, contactPostQuery } from '../fectching/query.ts'
-import { QueryClient } from '@tanstack/react-query'
 import { ContactsOutArray } from '../types/conctact.ts'
 
 
-export const loader = async (queryClient: QueryClient) => {
+export async function loader(queryClient: QueryClient) {
   const data = await queryClient.ensureQueryData(contactListQuery());
-  return data as ContactsOutArray;
-};
+  if (data) return data as ContactsOutArray;
+  return false as boolean;
+}
 
-export const action = async (queryClient: QueryClient) => {
+export async function action(queryClient: QueryClient) {
   const contact = await queryClient.ensureQueryData(contactPostQuery());
-  return redirect(`/contacts/${contact?._id}`);
-};
+  await queryClient.invalidateQueries({ queryKey: ['contacts', 'get'], exact: true })
+  return redirect(`/contact/${contact?._id}`);
+}
 
 export default function Root() {
-    const { contacts } = useLoaderData() as ContactsOutArray;
+    const data = useLoaderData() as ContactsOutArray | false;
+    const contacts = data ? data.contacts : false;
+
     return (
       <>
         <div id="sidebar">
@@ -44,7 +48,7 @@ export default function Root() {
             </Form>
           </div>
           <nav>
-            {contacts.length ? (
+            {contacts ? (
               <ul>
                 {contacts.map((contact) => (
                   <li key={contact._id}>
