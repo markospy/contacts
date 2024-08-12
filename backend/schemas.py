@@ -20,7 +20,12 @@ class Contact(BaseModel):
     address: str | None = None
     company: str | None = None
     job_title: str | None = None
-    favorite: bool | None = False
+    favorite: bool | None = None
+
+
+class ContactUpdate(Contact):
+    first_name: str | None = None
+    favorite: bool | None = None
 
 
 class ContactOut(Contact):
