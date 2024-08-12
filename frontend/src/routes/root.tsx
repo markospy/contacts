@@ -1,4 +1,4 @@
-import { Outlet, Link, useLoaderData, Form, redirect } from 'react-router-dom'
+import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation } from 'react-router-dom'
 import { QueryClient } from '@tanstack/react-query';
 import { contactListQuery, contactPostQuery } from '../fectching/query.ts'
 import { ContactsOutArray } from '../types/conctact.ts'
@@ -13,12 +13,13 @@ export async function loader(queryClient: QueryClient) {
 export async function action(queryClient: QueryClient) {
   const contact = await queryClient.ensureQueryData(contactPostQuery());
   await queryClient.invalidateQueries({ queryKey: ['contacts', 'get'], exact: true })
-  return redirect(`/contact/${contact?._id}`);
+  return redirect(`/contact/${contact._id}/edit`);
 }
 
 export default function Root() {
     const data = useLoaderData() as ContactsOutArray | false;
     const contacts = data ? data.contacts : false;
+    const navigation = useNavigation();
 
     return (
       <>
@@ -52,13 +53,22 @@ export default function Root() {
               <ul>
                 {contacts.map((contact) => (
                   <li key={contact._id}>
-                    <Link to={`contact/${contact._id}`} >
+                    <NavLink
+                      to={`contact/${contact._id}`}
+                      className={({ isActive, isPending }) =>
+                        isActive
+                          ? "active"
+                          : isPending
+                          ? "pending"
+                          : ""
+                      }
+                    >
                       {contact.first_name && contact.first_name}
                       {" "}
                       {contact.last_name && contact.last_name}
                       {" "}
                       {contact.favorite && <span>★</span>}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -69,7 +79,10 @@ export default function Root() {
             )}
           </nav>
         </div>
-        <div id="detail">
+        <div 
+         id="detail"
+         className={navigation.state === "loading" ? "loading" : ""}
+        >
           <Outlet />
         </div>
       </>

@@ -5,9 +5,10 @@ import { contactQuery } from '../fectching/query';
 
 
 export const loader = (queryClient: QueryClient) =>
-  async ({ params }: LoaderFunctionArgs<string>) => {
+  async ({ params }: LoaderFunctionArgs) => {
     if (typeof params.contactId === 'string') {
       const contact = await queryClient.ensureQueryData(contactQuery(params.contactId));
+      console.log(contact)
       return contact as ContactsOut;
     }
   }
