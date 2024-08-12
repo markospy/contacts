@@ -14,6 +14,9 @@ export const getContacts = async (): Promise<ContactsOutArray>  => {
       console.log(res.data);
       return res.data;
     })
+    .catch((e: Error) => {
+      console.log(e);
+    })
 };
 
 export const getContact = async (contactId: string): Promise<ContactsOut>  => {
@@ -24,7 +27,7 @@ export const getContact = async (contactId: string): Promise<ContactsOut>  => {
     })
 };
 
-export const createContact = (): Promise<ContactsOut> => {
+export const createContact = async (): Promise<ContactsOut> => {
   return instance.post('/contacts/', {
     "first_name": "Desconocido",
     "favorite": false
