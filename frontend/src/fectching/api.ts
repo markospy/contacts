@@ -11,19 +11,30 @@ const instance = axios.create({
 export const getContacts = async (): Promise<ContactsOutArray>  => {
   return instance.get('/contacts')
     .then(res => {
-      console.log(res.data);
       return res.data;
     })
-    .catch((e: Error) => {
-      console.log(e);
+    .catch(() => {
+      return { contacts: false, error: 'Erro ao obter contatos' };
     })
 };
+
+export const getContactByName = async (q: string): Promise<ContactsOutArray> => {
+  return instance.get(`/contacts_by_name?name=${q}`)
+    .then(res => {
+      return res.data;
+    })
+    .catch(() => {
+      return false
+    })
+}
 
 export const getContact = async (contactId: string): Promise<ContactsOut>  => {
   return instance.get(`/contacts/${contactId}`)
     .then(res => {
-      console.log(res.data);
       return res.data;
+    })
+    .catch((e: Error) => {
+      console.log(e);
     })
 };
 
@@ -33,8 +44,10 @@ Promise<ContactsOut> => {
     "first_name": "Desconocido",
     "favorite": false
   }).then(response => {
-    console.log(response.data);
     return response.data;
+  })
+  .catch((e: Error) => {
+    console.log(e);
   })
 }
 
@@ -42,10 +55,22 @@ export const updateContact = async (
   contactId: string,
   updates: ContactUpdate
 ): Promise<ContactsOut> => {
-  console.log(updates)
   return instance.put(`/contacts/${contactId}`, updates)
   .then(response => {
-    console.log(response.data);
     return response.data;
+  })
+  .catch((e: Error) => {
+    console.log(e);
+  })
+}
+
+
+export const deleteContact = async (contactId: string) => {
+  return instance.delete(`/contacts/${contactId}`)
+  .then(response => {
+    return response.data;
+  })
+  .catch((e: Error) => {
+    console.log(e);
   })
 }
