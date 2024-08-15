@@ -41,3 +41,6 @@ class Database:
 
     def close(self):
         self.client.close()
+
+
+db = Database(uri="mongodb://localhost:27017/", database_name="contacts")

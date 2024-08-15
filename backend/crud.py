@@ -1,10 +1,8 @@
 from bson import ObjectId
-from exceptions import verify_contact, verify_id
+from exceptions import get_contact, verify_id
 from fastapi import status
 from fastapi.exceptions import HTTPException
-from mongo_db import Database
-
-db = Database(uri="mongodb://localhost:27017/", database_name="contacts")
+from mongo_db import db
 
 
 def create_contact(contact):
@@ -32,8 +30,7 @@ def get_contact_by_id(contact_id: str):
         dict: El contacto encontrado, o None si no se encuentra.
     """
     verify_id(contact_id)
-    verify_contact(contact_id, db)
-    contact = db.find_one_document("contacts", {"_id": ObjectId(contact_id)})
+    contact = get_contact(contact_id=contact_id)
     return contact
 
 
@@ -47,13 +44,7 @@ def get_contact_by_name(name: str):
     Returns:
         dict: El contacto encontrado, o None si no se encuentra.
     """
-    filter = {
-        "$or": [{"first_name": {"$regex": name, "$options": "i"}}, {"last_name": {"$regex": name, "$options": "i"}}]
-    }
-    count, contacts_cursor = db.find_documents_by_name("contacts", filter)
-    contacts = list(contacts_cursor)
-    if not contacts:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact no found.")
+    count, contacts = get_contact(name=name)
     return (count, contacts)
 
 
@@ -83,7 +74,7 @@ def update_contact(contact_id: str, updates: dict):
         int: El número de documentos actualizados.
     """
     verify_id(contact_id)
-    verify_contact(contact_id, db)
+    get_contact(contact_id=contact_id)
 
     # Verificar que solo se actualicen los campos permitidos
     allowed_fields = [
@@ -117,6 +108,6 @@ def delete_contact(contact_id: str):
         int: El número de documentos eliminados.
     """
     verify_id(contact_id)
-    verify_contact(contact_id, db)
+    get_contact(contact_id=contact_id)
     result = db.delete_one_document("contacts", ObjectId(contact_id))
     return result.deleted_count
