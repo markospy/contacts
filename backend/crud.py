@@ -37,6 +37,26 @@ def get_contact_by_id(contact_id: str):
     return contact
 
 
+def get_contact_by_name(name: str):
+    """
+    Devuelve los conctactos almacenado en la base de datos MongoDB que coincide con el nombre o apellido.
+
+    Args:
+        name (str): Nombre o apellido  del contacto a obtener.
+
+    Returns:
+        dict: El contacto encontrado, o None si no se encuentra.
+    """
+    filter = {
+        "$or": [{"first_name": {"$regex": name, "$options": "i"}}, {"last_name": {"$regex": name, "$options": "i"}}]
+    }
+    count, contacts_cursor = db.find_documents_by_name("contacts", filter)
+    contacts = list(contacts_cursor)
+    if not contacts:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact no found.")
+    return (count, contacts)
+
+
 def get_all_contacts(skip, limit):
     """
     Devuelve una lista de todos los contactos almacenados en la base de datos MongoDB.
@@ -45,9 +65,7 @@ def get_all_contacts(skip, limit):
         list: Lista de diccionarios, cada uno representando un contacto.
     """
     count, contacts_cursor = db.find_all("contacts", skip, limit)
-    contacts = []
-    for contact in contacts_cursor:
-        contacts.append(contact)
+    contacts = list(contacts_cursor)
     if not contacts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact no found.")
     return (count, contacts)
@@ -68,8 +86,22 @@ def update_contact(contact_id: str, updates: dict):
     verify_contact(contact_id, db)
 
     # Verificar que solo se actualicen los campos permitidos
-    allowed_fields = ["first_name", "last_name", "twitter", "description"]
+    allowed_fields = [
+        "first_name",
+        "last_name",
+        "date_birth",
+        "phone",
+        "country",
+        "twitter",
+        "description",
+        "email",
+        "address",
+        "company",
+        "job_title",
+        "favorite",
+    ]
     updates = {field: value for field, value in updates.items() if field in allowed_fields}
+    print(updates)
     result = db.update_one_document("contacts", ObjectId(contact_id), updates)
     return result.modified_count
 

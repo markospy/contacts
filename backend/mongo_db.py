@@ -25,6 +25,12 @@ class Database:
         collection = self.get_collection(collection_name)
         return collection.find_one(filter)
 
+    def find_documents_by_name(self, collection_name, filter):
+        collection = self.get_collection(collection_name)
+        print(filter)
+        count = collection.count_documents(filter)
+        return (count, collection.find(filter))
+
     def update_one_document(self, collection_name, filter, updates):
         collection = self.get_collection(collection_name)
         return collection.update_one({"_id": filter}, {"$set": updates})
