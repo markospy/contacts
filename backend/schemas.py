@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, List
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict, EmailStr, Field
 from pydantic_extra_types.country import CountryAlpha3
@@ -48,7 +48,39 @@ class ContactOut(Contact):
                 "address": "Calle 123, Ciudad, Estado, País",
                 "company": "Ejemplo de empresa",
                 "job_title": "Ingeniero de software",
-                "favorite": "True" "",
+                "favorite": "True",
+            }
+        },
+    )
+
+
+class ContactOutCount(BaseModel):
+    count: int
+    contacts: List[ContactOut]
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+        json_schema_extra={
+            "example": {
+                "count": 1,
+                "contacts": [
+                    {
+                        "_id": "605c72ef2f8fb814b2d6f6b4",
+                        "first_name": "Juan",
+                        "last_name": "Pérez",
+                        "date_birth": "1990-01-01",
+                        "phone": "+1 123 456 7890",
+                        "country": "MEX",
+                        "twitter": "@juanperez",
+                        "description": "Ingeniero de software con experiencia en desarrollo web y móvil.",
+                        "email": "juan.perez@example.com",
+                        "address": "Calle 123, Ciudad, Estado, País",
+                        "company": "Ejemplo de empresa",
+                        "job_title": "Ingeniero de software",
+                        "favorite": "True",
+                    }
+                ],
             }
         },
     )
