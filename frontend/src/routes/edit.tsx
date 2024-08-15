@@ -1,20 +1,21 @@
-import { Form, useLoaderData, redirect, LoaderFunctionArgs } from "react-router-dom";
+import { Form, useLoaderData, redirect, LoaderFunctionArgs, useNavigate } from "react-router-dom";
+import { QueryClient } from "@tanstack/react-query";
 import { ContactsOut } from '../types/conctact.ts'
 import { contactUpdate } from '../fectching/query';
-import { queryClient } from '../main.tsx'
 
-export const action = async ({ request, params }: LoaderFunctionArgs) => {
+export const action = (queryClient: QueryClient) => async ({ request, params }: LoaderFunctionArgs) => {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
   console.log(updates)
   if (params.contactId){
-    await queryClient.ensureQueryData(contactUpdate(params.contactId, updates));
+    await queryClient.fetchQuery(contactUpdate(params.contactId, updates));
     return redirect(`/contact/${params.contactId}`);
   }
 }
 
 export default function EditContact() {
   const contact = useLoaderData() as ContactsOut;
+  const navigate = useNavigate();
 
   return (
     <Form method="post" id="contact-form">
@@ -54,7 +55,7 @@ export default function EditContact() {
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button type="button" onClick={() => navigate(-1)}>Cancel</button>
       </p>
     </Form>
   );
