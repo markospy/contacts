@@ -1,19 +1,34 @@
-import { Form, Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { Form, Link, LoaderFunctionArgs, useLoaderData, useFetcher } from "react-router-dom";
 import { QueryClient } from '@tanstack/react-query';
 import { ContactsOut } from '../types/conctact';
-import { contactQuery } from '../fectching/query';
+import { contactQuery, contactUpdate } from '../fectching/query';
 
 
 export const loader = (queryClient: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
     if (typeof params.contactId === 'string') {
-      const contact = await queryClient.ensureQueryData(contactQuery(params.contactId));
-      console.log(contact)
+      const contact = await queryClient.fetchQuery(contactQuery(params.contactId));
+      if (!contact) {
+        throw new Response("", {
+          status: 404,
+          statusText: "Not Found",
+        });
+      }
+
       return contact as ContactsOut;
     }
   }
 
-export function Contact() {
+  export const action = (queryClient: QueryClient) => async ({ request, params }: LoaderFunctionArgs) => {
+    const formData = await request.formData();
+    const updates = Object.fromEntries(formData);
+    console.log(updates)
+    if (params.contactId){
+      return await queryClient.fetchQuery(contactUpdate(params.contactId, updates));
+    }
+  }
+
+export default function Contact() {
   const contact = useLoaderData() as ContactsOut;
 
   return (
@@ -79,9 +94,13 @@ export function Contact() {
 }
 
 function Favorite({ contact }: { contact: ContactsOut }) {
-  const favorite = contact.favorite;
+  const fetcher = useFetcher();
+  const favorite = fetcher.formData
+    ? fetcher.formData.get("favorite") === "true"
+    : contact.favorite;
+
   return (
-    <Form method="post">
+    <fetcher.Form method="post">
       <button
         name="favorite"
         value={favorite ? "false" : "true"}
@@ -93,6 +112,6 @@ function Favorite({ contact }: { contact: ContactsOut }) {
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }
