@@ -1,57 +1,90 @@
-import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation } from 'react-router-dom'
+import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation, useSubmit } from 'react-router-dom'
 import { QueryClient } from '@tanstack/react-query';
-import { contactListQuery, contactPostQuery } from '../fectching/query.ts'
+import { useEffect } from 'react';
+import { contactListQuery, contactFilterQuery, contactPostQuery } from '../fectching/query.ts'
 import { ContactsOutArray } from '../types/conctact.ts'
+import { string } from 'zod';
 
 
-export async function loader(queryClient: QueryClient) {
-  const data = await queryClient.ensureQueryData(contactListQuery());
-  if (data) return data as ContactsOutArray;
-  return false as boolean;
+export const loader = (queryClient: QueryClient) =>
+  async ({ request }: { request: Request }) => {
+    if (request) {
+      const url = new URL(request.url);
+      const q = url.searchParams.get("q")
+      if (q) {
+        const contacts = await queryClient.ensureQueryData(contactFilterQuery(q));
+        if (contacts.count) {
+          return { contacts, q }
+        } else {
+          return { contacts, q };
+        }
+      }
+    }
+    const contacts = await queryClient.fetchQuery(contactListQuery());
+    if (contacts.count) return { contacts, ' ':string };
+    return { contacts, ' ':string };
 }
 
 export async function action(queryClient: QueryClient) {
-  const contact = await queryClient.ensureQueryData(contactPostQuery());
+  const contact = await queryClient.fetchQuery(contactPostQuery());
   await queryClient.invalidateQueries({ queryKey: ['contacts', 'get'], exact: true })
   return redirect(`/contact/${contact._id}/edit`);
 }
 
 export default function Root() {
-    const data = useLoaderData() as ContactsOutArray | false;
-    const contacts = data ? data.contacts : false;
+    const { contacts, q } = useLoaderData() as { contacts: ContactsOutArray | false, q: string  };
+    console.log(contacts)
+    const contacts_list = contacts ? contacts.contacts : false;
+    console.log(contacts_list)
     const navigation = useNavigation();
+    const submit = useSubmit();
+
+    const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has(
+      "q"
+    );
+
+    useEffect(() => {
+      if (typeof q === 'undefined') {
+        document.getElementById("q").value = ''
+      } else {
+        document.getElementById("q").value = q;
+      }
+    }, [q])
 
     return (
       <>
         <div id="sidebar">
           <h1>React Router Contacts</h1>
           <div>
-            <form id="search-form" role="search">
+            <Form id="search-form" role="search" >
               <input
                 id="q"
+                className={searching ? "loading" : ""}
                 aria-label="Search contacts"
                 placeholder="Search"
                 type="search"
                 name="q"
+                defaultValue={q}
+                onChange={(event) => {
+                  const isFirstSearch = q == null;
+                  submit(event.currentTarget.form, {
+                    replace: !isFirstSearch,
+                  });
+                }}
               />
-              <div
-                id="search-spinner"
-                aria-hidden
-                hidden={true}
-              />
-              <div
-                className="sr-only"
-                aria-live="polite"
-              ></div>
-            </form>
+              <div id="search-spinner" aria-hidden hidden={!searching} />
+              <div className="sr-only" aria-live="polite"></div>
+            </Form>
             <Form method="post">
               <button type="submit">New</button>
             </Form>
           </div>
           <nav>
-            {contacts ? (
+            {contacts_list ? (
               <ul>
-                {contacts.map((contact) => (
+                {contacts_list.map((contact) => (
                   <li key={contact._id}>
                     <NavLink
                       to={`contact/${contact._id}`}
