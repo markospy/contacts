@@ -12,7 +12,7 @@ export const loader = (queryClient: QueryClient) =>
       const url = new URL(request.url);
       const q = url.searchParams.get("q")
       if (q) {
-        const contacts = await queryClient.ensureQueryData(contactFilterQuery(q));
+        const contacts = await queryClient.fetchQuery(contactFilterQuery(q));
         if (contacts.count) {
           return { contacts, q }
         } else {
