@@ -4,8 +4,8 @@ const contactsIn = z.object(
     {
         first_name: z.string({required_error:'Debe escribir un nombe'}),
         last_name: z.string().optional(),
-        date_bird: z.string().datetime().optional(),
-        phone: z.string().optional(),
+        date_birth: z.string().datetime().optional(),
+        phone: z.array(z.string()).optional(),
         country: z.string().optional(),
         twitter: z.string().optional(),
         description: z.string().optional(),

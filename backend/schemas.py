@@ -11,7 +11,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 class Contact(BaseModel):
     first_name: str
     last_name: str | None = None
-    date_bird: datetime | None = None
+    date_birth: datetime | None = None
     phone: list[PhoneNumber] | None = None
     country: CountryAlpha3 | None = None
     twitter: str | None = None
