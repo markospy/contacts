@@ -1,8 +1,8 @@
-import { Form, Link, LoaderFunctionArgs, useLoaderData, useFetcher } from "react-router-dom";
+import { LoaderFunctionArgs, useLoaderData, useFetcher } from "react-router-dom";
 import { QueryClient } from '@tanstack/react-query';
 import { ContactsOut } from '../types/conctact';
 import { contactQuery, contactUpdate } from '../fectching/query';
-
+import ContactInfo from '../components/ContactInfo'
 
 export const loader = (queryClient: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
@@ -32,64 +32,11 @@ export default function Contact() {
   const contact = useLoaderData() as ContactsOut;
 
   return (
-    <div id="contact">
-      <div>
-        <img
-          key={contact._id}
-          src={
-            contact.first_name &&
-            `https://robohash.org/${contact._id}.png?size=200x200`
-          }
-        />
-      </div>
-
-      <div>
-        <h1>
-          {contact.first_name || contact.last_name ? (
-            <>
-              {contact.first_name} {contact.last_name}
-            </>
-          ) : (
-            <i>No Name</i>
-          )}{" "}
-          <Favorite contact={contact} />
-        </h1>
-
-        {contact.twitter && (
-          <p>
-            <a
-              target="_blank"
-              href={`https://twitter.com/${contact.twitter}`}
-            >
-              {contact.twitter}
-            </a>
-          </p>
-        )}
-
-        {contact.description && <p>{contact.description}</p>}
-
-        <div>
-          <Link to="edit">
-            <button>Edit</button>
-          </Link>
-          <Form
-            method="post"
-            action="destroy"
-            onSubmit={(event) => {
-              if (
-                !confirm(
-                  "Please confirm you want to delete this record."
-                )
-              ) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <button type="submit">Delete</button>
-          </Form>
-        </div>
-      </div>
-    </div>
+    <>
+      <ContactInfo contact={contact}>
+        <Favorite contact={contact} />
+      </ContactInfo>
+    </>
   );
 }
 
@@ -105,6 +52,12 @@ function Favorite({ contact }: { contact: ContactsOut }) {
         name="favorite"
         value={favorite ? "false" : "true"}
         aria-label={
+          favorite
+            ? "Remove from favorites"
+            : "Add to favorites"
+        }
+        className="border-none text-yellow-500 shadow-none hover:border-none hover:shadow-none text-xl p-0 m-0"
+        title={
           favorite
             ? "Remove from favorites"
             : "Add to favorites"
