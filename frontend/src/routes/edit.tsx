@@ -9,16 +9,37 @@ const regex = /\d+/g;
 
 export const action = (queryClient: QueryClient) => async ({ request, params }: LoaderFunctionArgs) => {
   const formData = await request.formData();
-  let updates = Object.fromEntries(formData);
+  const data = Object.fromEntries(formData);
 
-  updates = Object.fromEntries(
-    Object.entries(updates).map(([key, value]) => {
+  console.log(data)
+  const phone_1 = formData.get('phone_1');
+  const phone_2 = formData.get('phone_2');
+  console.log(phone_1);
+  console.log(phone_2);
+
+  const updates = Object.fromEntries(
+    Object.entries(data).map(([key, value]) => {
+      if (key === 'phone_1' || key === 'phone_2') {
+        return ['phone', []]; // Devolvemos undefined para omitir esta entrada
+      }
       if (typeof value === 'string' && value === '') {
         return [key, null]; // o [key, NaN] si prefieres
       }
       return [key, value];
     })
   );
+
+  console.log(updates);
+
+  if (phone_1 && phone_2) {
+    updates.phone = [phone_1, phone_2];
+  } else if (phone_1) {
+    updates.phone = [phone_1];
+  } else if (phone_2) {
+    updates.phone = [phone_2];
+  }
+
+  console.log(updates);
 
   if (params.contactId){
     await queryClient.fetchQuery(contactUpdate(params.contactId, updates));
@@ -106,20 +127,19 @@ export default function EditContact() {
         />
       </label>
 
-      {/* <label className='flex gap-2 items-center'>
+      <label className='flex gap-2 items-center'>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
         </svg>
         <span className='font-semibold'>Phones</span>
         <section className="flex gap-2 ml-[15px]">
-          {
-          contact?.phone ?
-            contact.phone.map(phone =>
+          {contact?.phone  ?
+            contact.phone.map((phone, index) =>
               <input
                 type="tel"
-                name="phone"
+                name={`phone_${index+1}`}
                 placeholder="+ 53 53494865"
-                defaultValue={phone.match(regex).join('') || ' '}
+                defaultValue={`+${phone.match(regex).join('') || ' '}`}
                 className="w-36 h-9"
               />
             )
@@ -127,20 +147,28 @@ export default function EditContact() {
             <>
               <input
                 type="tel"
-                name="phone"
+                name="phone_1"
                 placeholder="+ 53 53494865"
                 className="w-36 h-9"
               />
               <input
                 type="tel"
-                name="phone"
+                name="phone_2"
                 placeholder="+ 53 53494865"
                 className="w-36 h-9"
               />
             </>
           }
+          {contact.phone.length <= 1 &&
+            <input
+              type="tel"
+              name="phone_2"
+              placeholder="+ 53 53494865"
+              className="w-36 h-9"
+            />
+          }
         </section>
-      </label> */}
+      </label>
 
       <label className='flex gap-2 items-center'>
         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -175,7 +203,7 @@ export default function EditContact() {
 
       <label className='flex gap-2 items-center'>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
         </svg>
         <span className='font-semibold'>Company</span>
         <input
@@ -189,7 +217,7 @@ export default function EditContact() {
 
       <label className='flex gap-2 items-center'>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
         </svg>
         <span className='font-semibold'>Work</span>
         <input
