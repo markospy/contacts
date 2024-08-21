@@ -114,7 +114,7 @@ export default function Root() {
         </div>
         <div 
          id="detail"
-         className={navigation.state === "loading" ? "loading" : ""}
+         className={`${navigation.state === "loading" ? "loading" : ""} flex flex-col justify-between`}
         >
           <Outlet />
         </div>
