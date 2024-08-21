@@ -26,6 +26,7 @@ export const loader = (queryClient: QueryClient) =>
     if (params.contactId){
       return await queryClient.fetchQuery(contactUpdate(params.contactId, updates));
     }
+    return null;
   }
 
 export default function Contact() {
