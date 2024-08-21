@@ -85,21 +85,24 @@ const ContactInfo = (props: PropsWithChildren<Contact>) => {
 										<p>{ formatDate(contact.date_birth) }</p>
 									</div>
 							}
-							<div className='flex gap-2 items-center'>
-								{
-									contact.country &&
-										<div className='flex gap-2 items-center'>
-											<span className="text-2xl">{getUnicodeFlagIcon(contact.country)}</span>
-											<h2 className='font-semibold'>{ clm.getCountryNameByAlpha3(contact.country) }:</h2>
-										</div>
-								}
-								{
-									contact.address &&
-										<div className='flex gap-2'>
-											<a href={`https://www.google.com/maps/place/${contact.address}`} target='_blank' className='hover:text-blue-600'>{ contact.address }</a>
-										</div>
-								}
-							</div>
+							{
+							(contact.country || contact.address) &&
+								<div className='flex gap-2 items-center'>
+									{
+										contact.country &&
+											<div className='flex gap-2 items-center'>
+												<span className="text-2xl">{getUnicodeFlagIcon(contact.country)}</span>
+												<h2 className='font-semibold'>{ clm.getCountryNameByAlpha3(contact.country) }:</h2>
+											</div>
+									}
+									{
+										contact.address &&
+											<div className='flex gap-2'>
+												<a href={`https://www.google.com/maps/place/${contact.address}`} target='_blank' className='hover:text-blue-600'>{ contact.address }</a>
+											</div>
+									}
+								</div>
+							}
 							{
 								contact.phone &&
 									<section className='flex gap-2 items-center'>
@@ -123,53 +126,59 @@ const ContactInfo = (props: PropsWithChildren<Contact>) => {
 										</ul>
 									</section>
 							}
-							<div className='flex gap-8'>
-								{
-									contact.email &&
-										<div className='flex gap-2 items-center'>
-											<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-												<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-												<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
-												<path d="M3 7l9 6l9 -6" />
-											</svg>
-											<h2 className='font-semibold'>Email:</h2>
-											<a href={`mailto:${contact.email}`} target='_blank' className='hover:text-blue-600'>{ contact.email }</a>
-										</div>
-								}
-								{
-									contact.twitter &&
-										<div className='flex gap-2 items-center'>
-											<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-												<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-												<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c0 -.249 1.51 -2.772 1.818 -4.013z" />
-											</svg>
-											<h2 className='font-semibold'>Twiter:</h2>
-											<a href={`https://twitter.com/${contact.twitter}`} target='_blank' className='hover:text-blue-600'>{ contact.twitter }</a>
-										</div>
-								}
-							</div>
-							<div className='flex gap-8 items-center'>
-								{
-									contact.company &&
-										<div className='flex gap-2 items-center'>
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-												<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
-											</svg>
-											<h2 className='font-semibold'>Company:</h2>
-											<p>{ contact.company }</p>
-										</div>
-								}
-								{
-									contact.job_title &&
-										<div className='flex gap-2 items-center'>
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-												<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
-											</svg>
-											<h2 className='font-semibold'>Work:</h2>
-											<p>{ contact.job_title }</p>
-										</div>
-								}
-							</div>
+							{
+								(contact.email || contact.twitter) &&
+									<div className='flex gap-8'>
+										{
+											contact.email &&
+												<div className='flex gap-2 items-center'>
+													<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+														<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
+														<path d="M3 7l9 6l9 -6" />
+													</svg>
+													<h2 className='font-semibold'>Email:</h2>
+													<a href={`mailto:${contact.email}`} target='_blank' className='hover:text-blue-600'>{ contact.email }</a>
+												</div>
+										}
+										{
+											contact.twitter &&
+												<div className='flex gap-2 items-center'>
+													<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+														<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c0 -.249 1.51 -2.772 1.818 -4.013z" />
+													</svg>
+													<h2 className='font-semibold'>Twiter:</h2>
+													<a href={`https://twitter.com/${contact.twitter}`} target='_blank' className='hover:text-blue-600'>{ contact.twitter }</a>
+												</div>
+										}
+									</div>
+							}
+							{
+								(contact.company || contact.job_title) &&
+									<div className='flex gap-8 items-center'>
+										{
+											contact.company &&
+												<div className='flex gap-2 items-center'>
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+														<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
+													</svg>
+													<h2 className='font-semibold'>Company:</h2>
+													<p>{ contact.company }</p>
+												</div>
+										}
+										{
+											contact.job_title &&
+												<div className='flex gap-2 items-center'>
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+														<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
+													</svg>
+													<h2 className='font-semibold'>Work:</h2>
+													<p>{ contact.job_title }</p>
+												</div>
+										}
+									</div>
+							}
 							{
 								contact.description &&
 								<section>

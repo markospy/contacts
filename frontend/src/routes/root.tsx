@@ -106,7 +106,7 @@ export default function Root() {
                 ))}
               </ul>
             ) : (
-              <p>
+              <p className='mt-1'>
                 <i>No contacts</i>
               </p>
             )}
