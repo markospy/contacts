@@ -27,13 +27,10 @@ const ContactInfo = (props: PropsWithChildren<Contact>) => {
 		<div className='flex gap-6 text-gray-700'>
 			{(Object.keys(contact).length > 0) &&
 				<>
-					<div className="flex flex-col gap-4 min-w-56">
+					<div className="flex flex-col gap-4 min-w-56 max-w-56">
 						<img
 							key={contact._id}
-							src={
-								contact.first_name &&
-								`https://robohash.org/${contact._id}.png?size=200x200`
-							}
+							src={contact.photo ? contact.photo : '/unknown.png'}
 							className="rounded-lg"
 						/>
 						<div className="flex gap-6 justify-center">
