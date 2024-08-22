@@ -76,7 +76,8 @@ def update_contact(contact_id: str, updates: dict):
     verify_id(contact_id)
     get_contact(contact_id=contact_id)
 
-    updates["photo"] = str(updates["photo"])
+    if updates.get("photo", False):
+        updates["photo"] = str(updates["photo"])
     result = db.update_one_document("contacts", ObjectId(contact_id), updates)
     return result.modified_count
 
