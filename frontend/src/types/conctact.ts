@@ -2,8 +2,9 @@ import { z } from 'zod'
 
 const contactsIn = z.object(
     {
-        first_name: z.string({required_error:'Debe escribir un nombe'}),
+        first_name: z.string({required_error:'Debe escribir un nombre'}),
         last_name: z.string().optional(),
+        photo: z.string().optional(),
         date_birth: z.string().datetime().optional(),
         phone: z.array(z.string()).optional(),
         country: z.string().optional(),
