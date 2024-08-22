@@ -76,23 +76,7 @@ def update_contact(contact_id: str, updates: dict):
     verify_id(contact_id)
     get_contact(contact_id=contact_id)
 
-    # Verificar que solo se actualicen los campos permitidos
-    allowed_fields = [
-        "first_name",
-        "last_name",
-        "date_birth",
-        "phone",
-        "country",
-        "twitter",
-        "description",
-        "email",
-        "address",
-        "company",
-        "job_title",
-        "favorite",
-    ]
-    updates = {field: value for field, value in updates.items() if field in allowed_fields}
-    print(updates)
+    updates["photo"] = str(updates["photo"])
     result = db.update_one_document("contacts", ObjectId(contact_id), updates)
     return result.modified_count
 

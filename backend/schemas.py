@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, List
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, EmailStr, Field
+from pydantic import AnyUrl, BaseModel, BeforeValidator, ConfigDict, EmailStr, Field
 from pydantic_extra_types.country import CountryAlpha3
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
@@ -11,6 +11,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 class Contact(BaseModel):
     first_name: str
     last_name: str | None = None
+    photo: AnyUrl | None = None
     date_birth: datetime | None = None
     phone: list[PhoneNumber] | None = None
     country: CountryAlpha3 | None = None
