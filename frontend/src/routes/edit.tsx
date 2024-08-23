@@ -148,7 +148,7 @@ export default function EditContact() {
         </svg>
         <span className='font-semibold'>Phones</span>
         <section className="flex gap-2 ml-[15px]">
-          {contact?.phone  ?
+          {(contact?.phone && contact.phone.length > 0)  ?
             contact.phone.map((phone, index) =>
               <input
                 type="tel"
