@@ -6,7 +6,7 @@ from mongo_db import db
 
 
 def verify_id(contact_id: str):
-    # Verificar que el _id sea válido
+    """Verificar que el _id sea válido"""
     try:
         contact_id = ObjectId(contact_id)
     except bson.errors.InvalidId:

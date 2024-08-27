@@ -36,13 +36,16 @@ def get_contact_by_id(contact_id: str):
 
 def get_contact_by_name(name: str):
     """
-    Devuelve los conctactos almacenado en la base de datos MongoDB que coincide con el nombre o apellido.
+    Obtiene los contactos cuyo nombre o apellido coincide con el parametro name .
 
     Args:
-        name (str): Nombre o apellido  del contacto a obtener.
+        name (str): El nombre del contacto a buscar.
 
     Returns:
-        dict: El contacto encontrado, o None si no se encuentra.
+        tuple[int, list]: Una tupla que contiene el número de contactos encontrados y una lista de contactos.
+
+    Raises:
+        HTTPException: Si no se encuentra ningún contacto con el nombre proporcionado.
     """
     count, contacts = get_contact(name=name)
     return (count, contacts)

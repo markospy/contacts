@@ -36,14 +36,14 @@ async def get_all(skip: None | int = None, limit: None | int = None):
 
 
 @app.get("/contacts/{id}", status_code=200, response_model=ContactOut)
-async def get_one(id: str):
+async def get_by_id(id: str):
     """Obtiene un contacto almacenado en la base de datos por su ID."""
     contact = get_contact_by_id(id)
-    return ContactOut(**contact)
+    return ContactOut(**contact[1])
 
 
 @app.get("/contacts_by_name", status_code=200, response_model=ContactOutCount)
-async def get_many(name: str):
+async def get_by_name(name: str):
     """Obtiene un contacto almacenado en la base de datos por su nombre o apellidos."""
     count, contacts_all = get_contact_by_name(name)
     contacts: List[ContactOut] = []
