@@ -23,11 +23,11 @@ class Database:
 
     def find_one_document(self, collection_name, filter):
         collection = self.get_collection(collection_name)
-        return collection.find_one(filter)
+        count = collection.count_documents(filter)
+        return (count, collection.find_one(filter))
 
     def find_documents_by_name(self, collection_name, filter):
         collection = self.get_collection(collection_name)
-        print(filter)
         count = collection.count_documents(filter)
         return (count, collection.find(filter))
 
