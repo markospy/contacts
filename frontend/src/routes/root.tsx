@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation, useSubmit } from 'react-router-dom'
 import { QueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { contactListQuery, contactFilterQuery, contactPostQuery } from '../fectching/query.ts'
+import { contactListQuery, contactNameQuery, contactPostQuery } from '../fectching/query.ts'
 import { ContactsOutArray } from '../types/conctact.ts'
 import { string } from 'zod';
 
@@ -12,8 +12,8 @@ export const loader = (queryClient: QueryClient) =>
       const url = new URL(request.url);
       const q = url.searchParams.get("q")
       if (q) {
-        const contacts = await queryClient.fetchQuery(contactFilterQuery(q));
-        if (contacts.count) {
+        const contacts = await queryClient.fetchQuery(contactNameQuery(q));
+        if (contacts) {
           return { contacts, q }
         } else {
           return { contacts, q };

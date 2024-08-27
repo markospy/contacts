@@ -10,14 +10,14 @@ export const contactListQuery = () =>
 		staleTime: 0,
 	})
 
-export const contactFilterQuery = (q: string) =>
-	queryOptions({
-		queryKey: ['contacts', 'get', 'filter', q],
-		queryFn: () => getContactByName(q),
+export const contactNameQuery = (name: string) =>
+	({
+		queryKey: ['contacts', 'get', name],
+		queryFn: () => getContactByName(name),
 		staleTime: 0,
 	})
 
-export const contactQuery = (contactId: string) =>
+export const contactIdQuery = (contactId: string) =>
 	queryOptions({
 		queryKey: ['contact', 'get', contactId],
 		queryFn: () => getContact(contactId),

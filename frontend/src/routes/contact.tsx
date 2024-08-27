@@ -1,13 +1,13 @@
 import { LoaderFunctionArgs, useLoaderData, useFetcher, Link } from "react-router-dom";
 import { QueryClient } from '@tanstack/react-query';
 import { ContactsOut } from '../types/conctact';
-import { contactQuery, contactUpdate } from '../fectching/query';
+import { contactIdQuery, contactUpdate } from '../fectching/query';
 import ContactInfo from '../components/ContactInfo'
 
 export const loader = (queryClient: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
     if (typeof params.contactId === 'string') {
-      const contact = await queryClient.fetchQuery(contactQuery(params.contactId));
+      const contact = await queryClient.fetchQuery(contactIdQuery(params.contactId));
       if (!contact) {
         throw new Response("", {
           status: 404,

@@ -5,7 +5,7 @@ import { ContactsOutArray, ContactsOut, ContactUpdate } from '../types/conctact'
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:8000/',
   timeout: 1000,
-  headers: { 'Accept': 'application/json' }
+  headers: { 'Content-Type': 'application/json' }
 })
 
 export const getContacts = async (): Promise<ContactsOutArray>  => {
@@ -21,11 +21,10 @@ export const getContacts = async (): Promise<ContactsOutArray>  => {
 export const getContactByName = async (q: string): Promise<ContactsOutArray> => {
   return instance.get(`/contacts_by_name?name=${q}`)
     .then(res => {
+      console.log(res.data)
       return res.data;
     })
-    .catch(() => {
-      return false
-    })
+    .catch( error => error.response.data)
 }
 
 export const getContact = async (contactId: string): Promise<ContactsOut>  => {
