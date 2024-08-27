@@ -1,9 +1,10 @@
 import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation, useSubmit } from 'react-router-dom'
 import { QueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { contactListQuery, contactNameQuery, contactPostQuery } from '../fectching/query.ts'
+import { contactListQuery, contactNameQuery } from '../fectching/query.ts'
 import { ContactsOutArray } from '../types/conctact.ts'
 import { string } from 'zod';
+import { createContact } from '../fectching/api.ts';
 
 
 export const loader = (queryClient: QueryClient) =>
@@ -26,7 +27,7 @@ export const loader = (queryClient: QueryClient) =>
 }
 
 export async function action(queryClient: QueryClient) {
-  const contact = await queryClient.fetchQuery(contactPostQuery());
+  const contact = await createContact();
   await queryClient.invalidateQueries({ queryKey: ['contacts', 'get'], exact: true })
   return redirect(`/contact/${contact._id}/edit`);
 }

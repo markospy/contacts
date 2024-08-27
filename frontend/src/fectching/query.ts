@@ -1,34 +1,24 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getContacts, getContact, getContactByName, createContact, updateContact, deleteContact } from "./api";
+import { getAllContacts, getContactById, getContactByName, createContact, updateContact, deleteContact } from "./api";
 import { ContactUpdate } from '../types/conctact'
 
 
 export const contactListQuery = () =>
 	queryOptions({
 		queryKey: ['contacts', 'get'],
-		queryFn: () => getContacts(),
-		staleTime: 0,
+		queryFn: () => getAllContacts(),
 	})
 
 export const contactNameQuery = (name: string) =>
 	({
 		queryKey: ['contacts', 'get', name],
 		queryFn: () => getContactByName(name),
-		staleTime: 0,
 	})
 
 export const contactIdQuery = (contactId: string) =>
 	queryOptions({
 		queryKey: ['contact', 'get', contactId],
-		queryFn: () => getContact(contactId),
-		staleTime: 0,
-	})
-
-export const contactPostQuery = () =>
-	queryOptions({
-		queryKey: ['contact', 'post'],
-		queryFn: () => createContact(),
-		staleTime: 0,
+		queryFn: () => getContactById(contactId),
 	})
 
 export const contactUpdate = (contactId: string, updates: ContactUpdate) =>

@@ -56,7 +56,7 @@ async def get_by_name(name: str):
 async def create(contact: Contact) -> str:
     """Obtiene un contacto almacenado en la base de datos por su ID."""
     id = create_contact(contact.model_dump())
-    contact_created = get_contact_by_id(id)
+    count, contact_created = get_contact_by_id(id)
     return ContactOut(**contact_created)
 
 

@@ -8,7 +8,7 @@ const instance = axios.create({
   headers: { 'Content-Type': 'application/json' }
 })
 
-export const getContacts = async (): Promise<ContactsOutArray>  => {
+export const getAllContacts = async (): Promise<ContactsOutArray>  => {
   return instance.get('/contacts')
     .then(res => {
       return res.data;
@@ -27,7 +27,7 @@ export const getContactByName = async (q: string): Promise<ContactsOutArray> => 
     .catch( error => error.response.data)
 }
 
-export const getContact = async (contactId: string): Promise<ContactsOut>  => {
+export const getContactById = async (contactId: string): Promise<ContactsOut>  => {
   return instance.get(`/contacts/${contactId}`)
     .then(res => {
       return res.data;
@@ -42,12 +42,9 @@ Promise<ContactsOut> => {
   return instance.post('/contacts/', {
     "first_name": "Desconocido",
     "favorite": false
-  }).then(response => {
-    return response.data;
-  })
-  .catch((e: Error) => {
-    console.log(e);
-  })
+    })
+    .then(response => response.data)
+    .catch(error => error.response.data)
 }
 
 export const updateContact = async (

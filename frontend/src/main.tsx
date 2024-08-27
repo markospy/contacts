@@ -10,7 +10,13 @@ import EditContact, {action as editAction} from "./routes/edit";
 import { action as destroyAction} from './routes/destroy';
 import Index from './routes/index';
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
