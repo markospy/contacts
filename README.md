@@ -45,15 +45,15 @@ Aquí muestro algunas capturas de pantalla de la aplicación en acción:
 
 <div style= "display: flex; flex-wrap: wrap; justify-content: center; gap: 24px">
   <div>
-    <img src='screenshots/main.png' alt='Pantalla de inicio' />
+    <img src='doc/main_screen.png' alt='Pantalla de inicio' />
     <p>Pantalla de inicio</p>
   </div>
   <div>
-    <img src='screenshots/create_contact.png' alt='Crear un nuevo contacto' />
+    <img src='doc/form.png' alt='Crear un nuevo contacto' />
     <p>Crear un nuevo contacto</p>
   </div>
   <div>
-    <img src='screenshots/contact_detail.png' alt='Ver detalles de un contacto' />
+    <img src='doc/details.png' alt='Ver detalles de un contacto' />
     <p>Ver detalles de un contacto</p>
   </div>
 </div>

@@ -1,7 +1,8 @@
 import { LoaderFunctionArgs, useLoaderData, useFetcher, Link } from "react-router-dom";
 import { QueryClient } from '@tanstack/react-query';
 import { ContactsOut } from '../types/conctact';
-import { contactIdQuery, contactUpdate } from '../fectching/query';
+import { contactIdQuery } from '../fectching/query';
+import { updateContact } from "../fectching/api";
 import ContactInfo from '../components/ContactInfo'
 
 export const loader = (queryClient: QueryClient) =>
@@ -22,9 +23,9 @@ export const loader = (queryClient: QueryClient) =>
   export const action = (queryClient: QueryClient) => async ({ request, params }: LoaderFunctionArgs) => {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
-    console.log(updates)
     if (params.contactId){
-      return await queryClient.fetchQuery(contactUpdate(params.contactId, updates));
+      await updateContact(params.contactId, updates);
+      await queryClient.cancelQueries({ queryKey: ['contacts', 'get'], exact: true });
     }
     return null;
   }

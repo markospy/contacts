@@ -1,7 +1,7 @@
 import { Form, useLoaderData, redirect, LoaderFunctionArgs, useNavigate } from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import { ContactsOut } from '../types/conctact.ts'
-import { contactUpdate } from '../fectching/query';
+import { updateContact } from "../fectching/api.ts";
 import clm from 'country-locale-map'
 
 
@@ -29,8 +29,6 @@ export const action = (queryClient: QueryClient) => async ({ request, params }: 
     })
   );
 
-  console.log(updates);
-
   if (phone_1 && phone_2) {
     updates.phone = [phone_1, phone_2];
   } else if (phone_1) {
@@ -39,10 +37,9 @@ export const action = (queryClient: QueryClient) => async ({ request, params }: 
     updates.phone = [phone_2];
   }
 
-  console.log(updates);
-
   if (params.contactId){
-    await queryClient.fetchQuery(contactUpdate(params.contactId, updates));
+    await updateContact(params.contactId, updates);
+    await queryClient.invalidateQueries({ queryKey: ['contacts', 'get'], exact: true })
     return redirect(`/contact/${params.contactId}`);
   }
 }

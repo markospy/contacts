@@ -21,7 +21,7 @@ export const loader = (queryClient: QueryClient) =>
         }
       }
     }
-    const contacts = await queryClient.fetchQuery(contactListQuery());
+    const contacts = await queryClient.fetchQuery(contactListQuery);
     if (contacts.count) return { contacts, ' ':string };
     return { contacts, ' ':string };
 }
@@ -113,7 +113,7 @@ export default function Root() {
             )}
           </nav>
         </div>
-        <div 
+        <div
          id="detail"
          className={`${navigation.state === "loading" ? "loading" : ""} flex flex-col justify-between`}
         >

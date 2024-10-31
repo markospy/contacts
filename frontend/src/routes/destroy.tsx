@@ -4,6 +4,6 @@ import { deleteContact } from "../fectching/api";
 
 export const action = (queryClient: QueryClient) => async({ params }: ActionFunctionArgs) => {
   await deleteContact(params.contactId as string);
-  queryClient.invalidateQueries({queryKey:['contacts', 'get']})
+  await queryClient.invalidateQueries({ queryKey: ['contacts', 'get'], exact: true })
   return redirect("/");
 }
